@@ -1,0 +1,6 @@
+[submodule "front"]
+	path = front
+	url = https://github.com/Bradi30/front.git
+[submodule "server"]
+	path = server
+	url = https://github.com/Bradi30/server.git
