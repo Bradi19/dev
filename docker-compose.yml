@@ -1,5 +1,13 @@
 version: '3.8'
 services:
+  front: 
+    build:
+      context: $PWD/front
+      dockerfile: node.Dockerfile
+    volumes:
+      - $PWD/front:/app:rw
+    ports:
+      - 8000:8000
   proxy:
     build:
       dockerfile: $PWD/dockerfiles/proxy.Dockerfile
@@ -24,13 +32,16 @@ services:
     volumes:
       - $PWD/mycustom.cnf:/etc/mysql/conf.d/custom.cnf
       - db_data:/var/lib/mysql
+    ports:
+      - 3306:3306
   php_fpm:
     build:
       dockerfile: $PWD/dockerfiles/php-fpm.Dockerfile
       context: $PWD/dockerfiles/
     volumes:
       - $PWD:/var/www/html:rw
-      - $PWD/dockerfiles/php.ini:/usr/local/etc/php/conf.d/local.ini
+      - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
   adminer:
     image: docker.io/adminer:latest
     ports:
