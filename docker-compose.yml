@@ -13,11 +13,14 @@ services:
       dockerfile: $PWD/dockerfiles/proxy.Dockerfile
       context: $PWD/dockerfiles/nginx/
     env_file: .env
+    command: /bin/sh -c "nginx -g 'daemon off;'"
     depends_on:
       - php_fpm
       - db
     volumes:
       - $PWD:/var/www/html:rw
+      - $PWD/dockerfiles/default.conf:/etc/nginx/conf.d/defaultf.conf
+      - $PWD/dockerfiles/default.conf:/etc/nginx/sites-availabel/web.dev.local
       - $PWD/dockerfiles/nginx/nginx.conf:/etc/nginx/nginx.conf:rw
     ports:
       - 8003:80/tcp

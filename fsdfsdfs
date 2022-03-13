@@ -1,0 +1,7 @@
+127.0.0.1       web.2cents.local
+127.0.0.1       api.2cents.local
+127.0.0.1       api2.2cents.local
+127.0.0.1       admin.2cents.local
+127.0.0.1       phpmyadmin.2cents.local
+127.0.0.1       server.dev.local
+127.0.0.1       web.dev.local
