@@ -6,24 +6,25 @@ services:
       dockerfile: node.Dockerfile
     volumes:
       - $PWD/front:/app:rw
-    ports:
-      - 8000:8000
   proxy:
-    build:
-      dockerfile: $PWD/dockerfiles/proxy.Dockerfile
-      context: $PWD/dockerfiles/nginx/
+    # build:
+    #   dockerfile: $PWD/dockerfiles/proxy.Dockerfile
+    #   context: $PWD/dockerfiles/nginx/
+    image: docker.io/nginx:alpine
     env_file: .env
-    command: /bin/sh -c "nginx -g 'daemon off;'"
     depends_on:
       - php_fpm
       - db
+      - front
     volumes:
       - $PWD:/var/www/html:rw
-      - $PWD/dockerfiles/default.conf:/etc/nginx/conf.d/defaultf.conf
-      - $PWD/dockerfiles/default.conf:/etc/nginx/sites-availabel/web.dev.local
-      - $PWD/dockerfiles/nginx/nginx.conf:/etc/nginx/nginx.conf:rw
+      - $PWD/dockerfiles/default.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - front
+      - socket
     ports:
-      - 8003:80/tcp
+      # - 8000:8000/tcp
+      - 80:80/tcp
   db:
     image: docker.io/mysql:8.0
     env_file: .env
@@ -45,6 +46,17 @@ services:
       - $PWD:/var/www/html:rw
       - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
       - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
+  socket:
+    build:
+      dockerfile: $PWD/apichat/socket.Dockerfile
+      context: $PWD/apichat/
+    command: sh -c "php index.php"
+    volumes:
+      - $PWD/apichat:/var/www/html:rw
+      - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - 3000:9000
   adminer:
     image: docker.io/adminer:latest
     ports:
