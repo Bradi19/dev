@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  front: 
+    build:
+      context: $PWD/front
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD/front:/app:rw
+  proxy:
+    # build:
+    #   dockerfile: $PWD/dockerfiles/proxy.Dockerfile
+    #   context: $PWD/dockerfiles/nginx/
+    image: docker.io/nginx:alpine
+    env_file: .env
+    depends_on:
+      - php_fpm
+      - db
+      - front
+    volumes:
+      - $PWD:/var/www/html:rw
+      - $PWD/dockerfiles/production/default.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - front
+      - socket
+    ports:
+      # - 8000:8000/tcp
+      - 80:80/tcp
+  db:
+    image: docker.io/mysql:8.0
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    volumes:
+      - $PWD/mycustom.cnf:/etc/mysql/conf.d/custom.cnf
+      - db_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+  php_fpm:
+    build:
+      dockerfile: $PWD/dockerfiles/php-fpm.Dockerfile
+      context: $PWD/dockerfiles/
+    volumes:
+      - $PWD:/var/www/html:rw
+      - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
+  socket:
+    build:
+      dockerfile: $PWD/apichat/socket.Dockerfile
+      context: $PWD/apichat/
+    command: sh -c "php index.php"
+    volumes:
+      - $PWD/apichat:/var/www/html:rw
+      - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - 3000:9000
+  adminer:
+    image: docker.io/adminer:latest
+    ports:
+      - 8081:8080/tcp
+volumes:
+  db_data:
+    driver: local
