@@ -2,10 +2,10 @@ version: '3.8'
 services:
   front: 
     build:
-      context: $PWD/front
+      context: /front
       dockerfile: node.Dockerfile
     volumes:
-      - $PWD/front:/app:rw
+      - /front:/app:rw
   proxy:
     # build:
     #   dockerfile: $PWD/dockerfiles/proxy.Dockerfile
