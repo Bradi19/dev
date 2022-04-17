@@ -24,7 +24,7 @@ services:
       - socket
     ports:
       # - 8000:8000/tcp
-      - 80:80/tcp
+      - 443:443/tcp
   db:
     image: docker.io/mysql:8.0
     env_file: .env
@@ -36,8 +36,6 @@ services:
     volumes:
       - $PWD/mycustom.cnf:/etc/mysql/conf.d/custom.cnf
       - db_data:/var/lib/mysql
-    ports:
-      - 3306:3306
   php_fpm:
     build:
       dockerfile: $PWD/dockerfiles/php-fpm.Dockerfile
@@ -55,12 +53,9 @@ services:
       - $PWD/apichat:/var/www/html:rw
       - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
       - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
-    ports:
-      - 3000:9000
   adminer:
     image: docker.io/adminer:latest
     ports:
-      - 8081:8080/tcp
 volumes:
   db_data:
     driver: local
