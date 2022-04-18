@@ -7,9 +7,9 @@ services:
     volumes:
       - $PWD/front:/app:rw
   proxy:
-    # build:
-    #   dockerfile: $PWD/dockerfiles/proxy.Dockerfile
-    #   context: $PWD/dockerfiles/nginx/
+    build:
+      dockerfile: $PWD/dockerfiles/proxyprod.Dockerfile
+      context: $PWD/dockerfiles/
     image: docker.io/nginx:alpine
     env_file: .env
     depends_on:
