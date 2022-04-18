@@ -18,7 +18,7 @@ services:
       - front
     volumes:
       - $PWD:/var/www/html:rw
-      - $PWD/dockerfiles/production/default.conf:/etc/nginx/conf.d/default.conf
+      # - $PWD/dockerfiles/production/default.conf:/etc/nginx/conf.d/default.conf
     links:
       - front
       - socket
@@ -44,18 +44,6 @@ services:
       - $PWD:/var/www/html:rw
       - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
       - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
-  socket:
-    build:
-      dockerfile: $PWD/apichat/socket.Dockerfile
-      context: $PWD/apichat/
-    command: sh -c "php index.php"
-    volumes:
-      - $PWD/apichat:/var/www/html:rw
-      - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - $PWD/dockerfiles/php.ini:/usr/local/etc/php/php.ini
-  adminer:
-    image: docker.io/adminer:latest
-    ports:
 volumes:
   db_data:
     driver: local
