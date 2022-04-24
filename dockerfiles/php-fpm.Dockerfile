@@ -5,7 +5,6 @@ ARG GID
 ENV UID=${UID}
 ENV GID=${GID}
 WORKDIR /var/www/html
-COPY .env.example /var/www/html/server/.env
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN sed -i 's,^post_max_size =.*$,post_max_size = 1024M,' "$PHP_INI_DIR/php.ini"
@@ -20,6 +19,7 @@ RUN docker-php-ext-configure pdo_mysql
 RUN docker-php-ext-install sockets pdo_mysql 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 COPY msmtprc /etc/msmtprc
+COPY /var/www/html/dockerfiles/.env.example /var/www/html/server/.env
 RUN chmod 0777 /etc/msmtprc
 
 EXPOSE 80
