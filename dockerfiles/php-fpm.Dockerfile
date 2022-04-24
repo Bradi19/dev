@@ -18,7 +18,7 @@ RUN apt-get update\
 RUN docker-php-ext-configure pdo_mysql
 RUN docker-php-ext-install sockets pdo_mysql 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-COPY msmtprc /etc/msmtprc
+COPY dockerfiles/msmtprc /etc/msmtprc
 COPY dockerfiles/.env.example server/.env
 RUN chmod 0777 /etc/msmtprc
 
