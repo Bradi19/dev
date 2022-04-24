@@ -38,7 +38,7 @@ services:
   php_fpm:
     build:
       dockerfile: $PWD/dockerfiles/php-fpm.Dockerfile
-      context: $PWD/dockerfiles/
+      context: $PWD/
     volumes:
       - $PWD:/var/www/html:rw
       - $PWD/dockerfiles/local.ini:/usr/local/etc/php/conf.d/local.ini
